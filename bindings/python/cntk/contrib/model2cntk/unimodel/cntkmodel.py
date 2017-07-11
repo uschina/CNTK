@@ -8,7 +8,8 @@ from enum import Enum
 
 
 class CntkParameters(object):
-    def __init__(self): pass
+    def __init__(self): 
+        pass
 
 
 class CntkConvolutionParameters(CntkParameters):
@@ -20,7 +21,7 @@ class CntkConvolutionParameters(CntkParameters):
         self.scale_setting = [1, 1]
         self.bias_setting = [1, 1]
         self.need_bias = True
-        self.dilation = 1
+        self.dilation = [1, 1]
         self.group = 1
 
 
@@ -42,7 +43,7 @@ class CntkBatchNormParameters(CntkParameters):
         self.bias_setting = [1, 1]
 
 
-class CntkDenseLayerParameters(CntkParameters):
+class CntkDenseParameters(CntkParameters):
     def __init__(self):
         self.num_output = 0
         self.scale_setting = [1, 1]
@@ -78,7 +79,7 @@ class CntkLayerType(Enum):
     relu = 1
     convolution = 2
     pooling = 3
-    batch_normalization = 4
+    batch_norm = 4
     plus = 5
     dense = 6
     splice = 7
@@ -97,7 +98,6 @@ class CntkTensorDefinition(object):
         self.data = []
 
 
-# Currently, the function and layer of CNTK have some
 class CntkLayersDefinition(object):
     def __init__(self):
         self.inputs = []

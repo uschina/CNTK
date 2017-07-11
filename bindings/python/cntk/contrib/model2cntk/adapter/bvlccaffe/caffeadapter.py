@@ -110,7 +110,7 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
         cntk_layer_def.tensor = [inputs_info[0].tensor[0], output_size[0], output_size[1]]
 
     @staticmethod
-    def batch_normalization(caffe_parameters, inputs_info, cntk_layer_def):
+    def batch_norm(caffe_parameters, inputs_info, cntk_layer_def):
         cntk_layer_def.parameters = cntkmodel.CntkBatchNormParameters()
         cntk_layer_def.parameters.epsilon = caffe_parameters.eps
         SetupCaffeParameters.default(caffe_parameters, inputs_info, cntk_layer_def)
@@ -119,7 +119,7 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
     def dense(caffe_parameters, inputs_info, cntk_layer_def):
         if inputs_info:
             pass
-        cntk_layer_def.parameters = cntkmodel.CntkDenseLayerParameters()
+        cntk_layer_def.parameters = cntkmodel.CntkDenseParameters()
 
         cntk_layer_def.parameters.transpose = True if not caffe_parameters.transpose else False
         cntk_layer_def.parameters.num_output = caffe_parameters.num_output
@@ -189,47 +189,14 @@ class CaffeAdapter(baseadapter.Adapter):
         self._raw_net = None
         self._raw_solver = None
         self._uni_model = None
-        self._legacy_model = False
         self._source_solver = None
         return
 
     # Get the model description from bvlccaffe prototxt
     def load_description(self, solver_path, model_path=None):
-        # solver_dir = os.path.dirname(solver_path)
-        #
-        # # Loading the global configuration
-        # global_conf_path = os.path.join(solver_dir, GLOBAL_CONF_FILE)
-        # if os.path.exists(global_conf_path):
-        #     with open(global_conf_path) as global_conf_json:
-        #         self._global_conf = json.load(global_conf_json)
-        #
-        # caffe_impl = caffeimpl.CaffeResolver()
-        # self._uni_model = cntkmodel.CntkModelDescription()
-        # self._raw_solver = caffe_impl.solver()
-        # with open(solver_path, 'r') as solver_file:
-        #     text_format.Merge(solver_file.read(), self._raw_solver)
-        # if self._raw_solver.net == '':
-        #     raise KeyError('Invalid path of net script path')
-        # net_path = os.path.join(solver_dir, self._raw_solver.net)  # as net_path:
-        # self._raw_net = caffe_impl.net_parameter()
-        # with open(net_path, 'r') as net_file:
-        #     text_format.Merge(net_file.read(), self._raw_net)
-        # self._legacy_model = False if self._raw_net.layer else True
-        #
-        # self._uni_model.model_name = self._raw_net.name
-        #
-        # self.adapt_solver()
-        # self.adapt_data_provider()
-        # self.adapt_net()
-        #
-        # if model_path is not None:
-        #     self.adapt_parameter_data(model_path)
-        #
-        # return self._uni_model
-        AssertionError('NOT_IMPLEMENTED')
+        raise NotImplementedError
 
     def load_model(self, global_conf):
-
         sys.stdout.write('start loading model:\n')
         self._source_solver = global_conf.source_solver
 
@@ -242,8 +209,7 @@ class CaffeAdapter(baseadapter.Adapter):
         self._raw_solver = caffe_impl.solver()
         self._raw_net = caffe_impl.net()
         with open(self._source_solver.model_path, 'r') as net_file:
-            text_format.Merge(net_file.read(), self._raw_net)
-        self._legacy_model = False if self._raw_net.layer else True
+            text_format.Merge(net_file.read(), self._raw_net)        
         self._uni_model.model_name = os.path.splitext(self._source_solver.model_path)[0]
 
         self.adapt_data_provider()
@@ -261,7 +227,6 @@ class CaffeAdapter(baseadapter.Adapter):
         return self._uni_model
 
     def adapt_solver(self):
-        # TODO: Add solver adapter
         self._uni_model.solver = cntkmodel.CntkSolver()
         solver = self._uni_model.solver
         caffe_solver = self._raw_solver
@@ -312,10 +277,10 @@ class CaffeAdapter(baseadapter.Adapter):
                     sys.stderr.write('Non-decision type of CNTK\n')
                     raise AssertionError('Dangerous call\n')
                 if raw_layer.type == 'Scale' and scope_inputs[raw_layer.bottom[0]].op_type\
-                        == cntkmodel.CntkLayerType.batch_normalization:
+                        == cntkmodel.CntkLayerType.batch_norm:
                     pass
                 else:
-                    sys.stderr('dangerous call of %s', raw_layer.name)
+                    sys.stderr.write('dangerous call of %s', raw_layer.name)
                 bottom_name = raw_layer.bottom[0]
                 top_name = raw_layer.top[0]
                 scope_inputs[top_name] = scope_inputs[bottom_name]
@@ -333,8 +298,8 @@ class CaffeAdapter(baseadapter.Adapter):
             # refresh the lists
             # only support single output operation
             if len(raw_layer.top) > 1:
-                sys.stderr.write('Single output layers allowed currently: %s.%s\n'
-                                 % [str(cntk_layer_type), raw_layer.name])
+                sys.stderr.write('Single output layers allowed currently: %s.%s\n' \
+                                 % (str(cntk_layer_type), raw_layer.name))
             top_names = raw_layer.top[0]
             scope_inputs[top_names] = cntk_layer_def
 

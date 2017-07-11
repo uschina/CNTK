@@ -93,7 +93,6 @@ class BlockApiSetup(object):
 
 
 class ApiSetup(object):
-    # TODO: Dangerous call, verify next
     @staticmethod
     def convolution(cntk_layer, inputs):
         sanitize_input = internal.sanitize_input(inputs[0])
@@ -120,7 +119,7 @@ class ApiSetup(object):
                                          name=cntk_layer.op_name)(sanitize_input)
 
     @staticmethod
-    def batch_normalization(cntk_layer, inputs):
+    def batch_norm(cntk_layer, inputs):
         sanitize_input = internal.sanitize_input(inputs[0])
         parameter_tensor = (sanitize_input.shape[0], )
         scale_init = 1

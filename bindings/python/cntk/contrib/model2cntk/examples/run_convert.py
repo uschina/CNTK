@@ -15,6 +15,7 @@ NETWORK_DICT = {
     'ResNet152': 'Classification/ResNet_ImageNet/global_resnet152.json',
 }
 
+
 def convert_model(model_select):
     """
     Convert the model in Examples
