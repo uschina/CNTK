@@ -6,28 +6,26 @@
 
 from abc import ABCMeta, abstractmethod
 
-# TODO: Add support of multiple outputs layers
-# TODO: Add filter initialize setting
-
 
 class Adapter(object):
+    '''
+     The abstact class of model reader
+    '''
     __metaclass__ = ABCMeta
 
     def __init__(self):
         return
 
     @abstractmethod
-    def load_description(self, solver_path, model_path): pass
+    def load_description(self, solver_path, model_path):
+        '''
+         load the network structure
+        '''
+        pass
 
     @abstractmethod
-    def load_model(self, global_conf): pass
-
-
-# To support multiple platform, should be implemented
-class SetupParameters(object):
-    __metaclass__ = ABCMeta
-
-    @staticmethod
-    @abstractmethod
-    def convolution(native_parameters, input_info, cntk_layer_def): pass
-
+    def load_model(self, global_conf):
+        '''
+         load the network weights
+        '''
+        pass

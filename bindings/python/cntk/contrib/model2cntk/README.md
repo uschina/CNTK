@@ -1,14 +1,8 @@
-# Model2CNTK
+# CaffeConverter
 
-The project will help you convert training scripts or trained models from Caffe to CNTK.
-
-*Convert training scripts:* updating, coming soon
+The tool will help you convert trained models from Caffe to CNTK.
 
 *Convert trained models:* giving a model script and its weights file, export to CNTK model.
-
-## Environment
-
-We setup the local environment with `Windows 10, Python 2.7/3.5`.
 
 ## Dependency
 
@@ -16,7 +10,7 @@ We setup the local environment with `Windows 10, Python 2.7/3.5`.
 
     Using `pip install protobuf`
 
-3. Caffe runtime support (Optional)
+2. Caffe runtime support (Optional)
 
     While loading Caffe models, Model2CNTK will first try to find Caffe packages in you Python dirs. 
     If failing, system will turn to use protobuf to load the models (maybe long as a few mins). A 
@@ -24,11 +18,21 @@ We setup the local environment with `Windows 10, Python 2.7/3.5`.
     
     https://github.com/BVLC/caffe/tree/windows 
 
-## Command and Global Configuration
+3. You may need to compile caffe_pb2.py with following steps:
 
-python cntkboard.py --option *[convert_script/convert_model]* --conf *[global_conf_file]*
+    a. download and install *`protoc`* in official website
 
-*About global conf file:* find template settings in [Example](./examples/Classification/AlexNet_ImageNet/global.json)
+    b. *protoc -I=$Caffe_DIR --python_out=$DST_DIR $Caffe_DIR/proto/caffe.proto*
+
+    c. copy *caffe_pb2.py* to adapter/bvlccaffe
+
+## Usage and Configuration
+
+`CaffeConverter.from_model(global_conf_path)`
+
+*Usage example:* see [here](./examples/run_convert.py)
+
+*About global conf file:* see guideline in [here](./utils/README.md) and template in [here](./examples/Classification/AlexNet_ImageNet/global.json)
 
 ## Support layers
 
@@ -37,22 +41,20 @@ Convolution, Dense/Linear, ReLU, Max/Average Pooling, Softmax, Batch Normalizati
 ## Known Issues
 
 *Model version:* we only support inputs with definition of Input layer. To adapt it, please 
-first upgrade your model and prototxt with *upgrade_net_proto_text/binary.sh* (Caffe tools).
+first upgrade your model and prototxt in Caffe tools with commands:
+
+*upgrade_net_proto_text/binary.sh*
 
 ## Examples
 
 *Classification:*
 
-1. VGG-Net: [Link](./examples/Classification/VGG_ImageNet)
+1. [ResNet](./examples/Classification/ResNet_ImageNet)
 
-2. ResNet: [Link](./examples/Classification/ResNet_ImageNet)
+2. [GoogLeNet](./examples/Classification/GoogLeNet_ImageNet)
 
-3. GoogLeNet: [Link](./examples/Classification/GoogLeNet_ImageNet)
+3. [VGG-Net](./examples/Classification/VGG_ImageNet)
 
-4. NIN: [Link](./examples/Classification/NIN_ImageNet)
+4. [NIN](./examples/Classification/NIN_ImageNet)
 
-5. AlexNet: [Link](./examples/Classification/AlexNet_ImageNet)
-
-## Help 
-
-Please feel free to ping [yuxiao guo](v-yuxgu@microsoft.com)
+5. [AlexNet](./examples/Classification/AlexNet_ImageNet)

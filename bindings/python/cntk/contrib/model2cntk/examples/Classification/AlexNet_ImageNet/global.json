@@ -1,7 +1,7 @@
 {
 	"SourceSolver" : {
 	    "Source": "Caffe",
-	    "ModelPath": "./Classification/AlexNet_ImageNet/deploy.prototxt",
+	    "ModelPath": "./Classification/AlexNet_ImageNet/AlexNet_deploy.prototxt",
 	    "WeightsPath": "./Classification/AlexNet_ImageNet/bvlc_alexnet.caffemodel",
     	"PHASE": 1
 	},

@@ -1,8 +1,20 @@
-"""
-The script shows the usage of converter
-"""
+# ==============================================================================
+# Copyright (c) Microsoft. All rights reserved.
+# Licensed under the MIT license. See LICENSE.md file in the project root
+# for full license information.
+# ==============================================================================
+'''
+Demo of examples
+
+Args:
+    network: The networks to be converted in Example, default converting all models
+    log: The log file path
+'''
+
 import sys
-from cntk.contrib.model2cntk import ModelConverter
+import argparse
+from cntk.contrib.model2cntk import CaffeConverter
+
 
 NETWORK_DICT = {
     'AlexNet': 'Classification/AlexNet_ImageNet/global.json',
@@ -15,32 +27,16 @@ NETWORK_DICT = {
     'ResNet152': 'Classification/ResNet_ImageNet/global_resnet152.json',
 }
 
-
-def convert_model(model_select):
-    """
-    Convert the model in Examples
-
-    Args:
-        model_select (string): the model in NETWORK_DICT
-        out_path (string): where to save the converted model
-    
-    Return:
-        None
-    """
-    ModelConverter.convert_model(model_select)
-
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        sys.stderr.write('Please specify the converted Model')
-        sys.exit()
-    sys.stdout = open('log.txt', 'w')
-    if sys.argv[1] == 'ALL':
-        for key in NETWORK_DICT.keys():
-            convert_model(NETWORK_DICT[key])
-            
-        sys.exit()
-    if sys.argv[1] not in NETWORK_DICT:
-        sys.stderr.write('Please select the networks in the example lists \nResNet50')
-        sys.exit()
-    else:
-        convert_model(NETWORK_DICT[sys.argv[1]])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--network', help='networks to convert, separated with comma',
+                        required=False, default=None)
+    parser.add_argument('-l', '--log', help='the path to redir the logs',
+                        required=False, default=None)
+    args = vars(parser.parse_args())
+    if args['log'] is not None:
+        sys.stdout = open(args['log'], 'w')
+    networks = NETWORK_DICT.keys() if args['network'] is None \
+        else [item for item in args['network'].split(',')]
+    for key in networks:
+        CaffeConverter.from_model(NETWORK_DICT[key])

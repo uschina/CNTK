@@ -8,12 +8,19 @@ from enum import Enum
 
 
 class CntkParameters(object):
-    def __init__(self): 
+    '''
+     The parameter of all CNTK op
+    '''
+    def __init__(self):
         pass
 
 
 class CntkConvolutionParameters(CntkParameters):
+    '''
+     The parameter definition of convolution op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.output = 0
         self.stride = [0, 0]
         self.kernel = [0, 0]
@@ -26,7 +33,11 @@ class CntkConvolutionParameters(CntkParameters):
 
 
 class CntkPoolingParameters(CntkParameters):
+    '''
+     The parameter definition of pooling op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.stride = [0, 0]
         self.kernel = [0, 0]
         self.auto_pad = False
@@ -34,7 +45,11 @@ class CntkPoolingParameters(CntkParameters):
 
 
 class CntkBatchNormParameters(CntkParameters):
+    '''
+     The parameter definition of batch normalization op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.spatial = 2
         self.norm_time_const = 0
         self.blend_time_const = 0
@@ -44,7 +59,11 @@ class CntkBatchNormParameters(CntkParameters):
 
 
 class CntkDenseParameters(CntkParameters):
+    '''
+     The parameter definition of dense op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.num_output = 0
         self.scale_setting = [1, 1]
         self.bias_setting = [1, 1]
@@ -52,17 +71,20 @@ class CntkDenseParameters(CntkParameters):
 
 
 class CntkSpliceParameters(CntkParameters):
+    '''
+     The parameter definition of splice op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.axis = 1
 
 
-class CntkClassificationParameters(CntkParameters):
-    def __init__(self):
-        self.top_n = 1
-
-
 class CntkLRNParameters(CntkParameters):
+    '''
+     The parameter definition of LRN op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.kernel_size = 5
         self.alpha = 1
         self.beta = 5
@@ -70,12 +92,19 @@ class CntkLRNParameters(CntkParameters):
 
 
 class CntkPSROIPoolingParameters(CntkParameters):
+    '''
+     The parameter definition of PSROIPooling op
+    '''
     def __init__(self):
+        CntkParameters.__init__(self)
         self.group_size = 1
         self.out_channel = 1
 
 
 class CntkLayerType(Enum):
+    '''
+     The enumate of CNTK ops
+    '''
     relu = 1
     convolution = 2
     pooling = 3
@@ -93,12 +122,18 @@ class CntkLayerType(Enum):
 
 
 class CntkTensorDefinition(object):
+    '''
+     The definition of data blob
+    '''
     def __init__(self):
         self.tensor = [0 * 4]
         self.data = []
 
 
 class CntkLayersDefinition(object):
+    '''
+     The definition of nodes, created by Caffe and instaced by CNTK
+    '''
     def __init__(self):
         self.inputs = []
         self.outputs = []
@@ -110,6 +145,9 @@ class CntkLayersDefinition(object):
 
 
 class CntkSolver(object):
+    '''
+     Record the solver state
+    '''
     def __init__(self):
         self.learning_rate = None
         self.max_epoch = None
@@ -125,6 +163,9 @@ class CntkSolver(object):
 
 
 class CntkModelDescription(object):
+    '''
+     Record the basic information of model
+    '''
     def __init__(self):
         self.data_provider = []
         self.cntk_layers = {}              # Dict Key: function name, Value: function definition

@@ -15,7 +15,7 @@ from . import caffeimpl
 from . import caffe_pb2
 from google.protobuf import text_format
 
-def format_to_list(target, rank, default_pad=0):
+def _format_to_list(target, rank, default_pad=0):
     if isinstance(target, int):
         list_target = [target] * rank
     else:
@@ -25,15 +25,15 @@ def format_to_list(target, rank, default_pad=0):
     return list_target
 
 
-def setup_convolution_parameters(parameters, input_tensor, is_ceil_pad=False):
+def _setup_convolution_parameters(parameters, input_tensor, is_ceil_pad=False):
     # considering the ceil and floor padding of bvlccaffe
-    kernel_size = format_to_list(parameters.kernel_size, 2)
+    kernel_size = _format_to_list(parameters.kernel_size, 2)
     kernel_size[0] = parameters.kernel_h or kernel_size[0]
     kernel_size[1] = parameters.kernel_w or kernel_size[1]
-    strides = format_to_list(parameters.stride, 2, 1)
+    strides = _format_to_list(parameters.stride, 2, 1)
     strides[0] = parameters.stride_h or strides[0]
     strides[1] = parameters.stride_w or strides[1]
-    lower_pad = format_to_list(parameters.pad, 2, 0)
+    lower_pad = _format_to_list(parameters.pad, 2, 0)
     lower_pad[0] = parameters.pad_h or lower_pad[0]
     lower_pad[1] = parameters.pad_w or lower_pad[1]
     dilation = [1] * 2
@@ -50,9 +50,26 @@ def setup_convolution_parameters(parameters, input_tensor, is_ceil_pad=False):
     return kernel_size, strides, output_size, pad, dilation
 
 
-class SetupCaffeParameters(baseadapter.SetupParameters):
+class SetupCaffeParameters(object):
+    '''
+     Setup Caffe parameters into CNTK format
+    '''
     @staticmethod
     def default(caffe_parameters, inputs_info, cntk_layer_def, tensor_check=True):
+        '''
+         The default Caffe to CNTK uniform model setup
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+            tensor_check (bool, default=True): Whether to check the tensor shape
+
+        Return:
+            None
+        '''
         if caffe_parameters:
             pass
         # tensor align check
@@ -73,10 +90,23 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
 
     @staticmethod
     def convolution(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The convolution parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         cntk_layer_def.parameters = cntkmodel.CntkConvolutionParameters()
 
         kernel_size, strides, output_size, pad, dilation = \
-            setup_convolution_parameters(caffe_parameters, inputs_info[0].tensor)
+            _setup_convolution_parameters(caffe_parameters, inputs_info[0].tensor)
 
         # load the output channel numbers and bias setting
         cntk_layer_def.parameters.output = caffe_parameters.num_output
@@ -91,6 +121,19 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
 
     @staticmethod
     def pooling(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The pooling parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         cntk_layer_def.parameters = cntkmodel.CntkPoolingParameters()
 
         # To support global pooling
@@ -100,7 +143,7 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
             output_size = (1, 1)
             pad = False
         else:
-            filter_shape, strides, output_size, pad, _ = setup_convolution_parameters(
+            filter_shape, strides, output_size, pad, _ = _setup_convolution_parameters(
                 caffe_parameters, inputs_info[0].tensor, is_ceil_pad=True)
 
         cntk_layer_def.parameters.kernel = filter_shape
@@ -111,12 +154,38 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
 
     @staticmethod
     def batch_norm(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The batch normalization parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         cntk_layer_def.parameters = cntkmodel.CntkBatchNormParameters()
         cntk_layer_def.parameters.epsilon = caffe_parameters.eps
         SetupCaffeParameters.default(caffe_parameters, inputs_info, cntk_layer_def)
 
     @staticmethod
     def dense(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The dense parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         if inputs_info:
             pass
         cntk_layer_def.parameters = cntkmodel.CntkDenseParameters()
@@ -127,6 +196,19 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
 
     @staticmethod
     def splice(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The splice parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         cntk_layer_def.parameters = cntkmodel.CntkSpliceParameters()
 
         cntk_layer_def.parameters.axis = caffe_parameters.axis
@@ -139,30 +221,71 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
         cntk_layer_def.tensor = output_tensor
 
     @staticmethod
-    def classification(caffe_parameters, inputs_info, cntk_layer_def, tensor_check=False):
-        if inputs_info and tensor_check:
-            pass
-        cntk_layer_def.parameters = cntkmodel.CntkClassificationParameters()
-        cntk_layer_def.parameters.top_n = caffe_parameters.top_k
-
-    @staticmethod
-    def cross_entropy_with_softmax(caffe_parameters, inputs_info, cntk_layer_def, tensor_check=False):
-        pass
-
-    @staticmethod
     def relu(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The ReLU parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         SetupCaffeParameters.default(caffe_parameters, inputs_info, cntk_layer_def)
 
     @staticmethod
     def plus(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The plus parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         SetupCaffeParameters.default(caffe_parameters, inputs_info, cntk_layer_def)
 
     @staticmethod
     def dropout(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The dropout parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         SetupCaffeParameters.default(caffe_parameters, inputs_info, cntk_layer_def)
 
     @staticmethod
     def lrn(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The lrn parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         cntk_layer_def.parameters = cntkmodel.CntkLRNParameters()
         cntk_layer_def.parameters.kernel_size = (caffe_parameters.local_size + 1) / 2
         cntk_layer_def.parameters.alpha = caffe_parameters.alpha
@@ -172,6 +295,19 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
 
     @staticmethod
     def psroi_pooling(caffe_parameters, _, cntk_layer_def):
+        '''
+         The psroipooling parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         cntk_layer_def.parameters = cntkmodel.CntkPSROIPoolingParameters()
         cntk_layer_def.parameters.group_size = caffe_parameters.group_size
         cntk_layer_def.parameters.out_channel = caffe_parameters.output_dim
@@ -179,30 +315,53 @@ class SetupCaffeParameters(baseadapter.SetupParameters):
 
     @staticmethod
     def softmax(caffe_parameters, inputs_info, cntk_layer_def):
+        '''
+         The softmax parameter setup from Caffe to CNTK
+
+        Args:
+            caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
+            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+                The input information of current layer
+            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+                The converted definition of CNTK layers
+
+        Return:
+            None
+        '''
         SetupCaffeParameters.default(caffe_parameters, inputs_info, cntk_layer_def)
 
 NEGLECT_LAYERS = ['Scale', 'Dropout']
 
 
 class CaffeAdapter(baseadapter.Adapter):
+    '''
+     Adapt Caffe prototxt and weights into uniform format
+    '''
     def __init__(self):
+        baseadapter.Adapter.__init__(self)
         self._raw_net = None
         self._raw_solver = None
         self._uni_model = None
         self._source_solver = None
         return
 
-    # Get the model description from bvlccaffe prototxt
-    def load_description(self, solver_path, model_path=None):
-        raise NotImplementedError
-
     def load_model(self, global_conf):
-        sys.stdout.write('start loading model:\n')
+        '''
+         Load prototxt and weights of Caffe, parsing them into uniform model
+
+        Args:
+            global_conf (:class:`~cntk.contrib.model2cntk.utils.globalconf.GlobalConf`):
+                The global configurations
+        
+        Return:
+            None
+        '''
+        sys.stdout.write('Start loading model:\n')
         self._source_solver = global_conf.source_solver
 
         # loading the model
         if not os.path.exists(self._source_solver.model_path):
-            sys.stderr.write('check the file name and path of input model path\n')
+            sys.stderr.write('Check the file name and path of input model path\n')
             sys.exit()
         caffe_impl = caffeimpl.CaffeResolver()
         self._uni_model = cntkmodel.CntkModelDescription()
@@ -212,21 +371,30 @@ class CaffeAdapter(baseadapter.Adapter):
             text_format.Merge(net_file.read(), self._raw_net)        
         self._uni_model.model_name = os.path.splitext(self._source_solver.model_path)[0]
 
-        self.adapt_data_provider()
-        self.adapt_net()
+        self._adapt_data_provider()
+        self._adapt_net()
 
         # loading the weights
         if not os.path.exists(self._source_solver.weights_path):
-            sys.stderr.write('check the file name and path of weights file\n')
+            sys.stderr.write('Check the file name and path of weights file\n')
             sys.exit()
         else:
-            self.adapt_parameter_data()
+            self._adapt_parameter_data()
 
-        sys.stdout.write('finished model loading\n')
+        sys.stdout.write('Finished model loading\n')
 
         return self._uni_model
 
     def adapt_solver(self):
+        '''
+         Adapt Caffe solver into CNTK format
+        
+        Args:
+            None
+        
+        Return:
+            None
+        '''
         self._uni_model.solver = cntkmodel.CntkSolver()
         solver = self._uni_model.solver
         caffe_solver = self._raw_solver
@@ -243,14 +411,14 @@ class CaffeAdapter(baseadapter.Adapter):
         solver.weight_decay = caffe_solver.weight_decay
         solver.number_to_show_result = caffe_solver.display
 
-    def adapt_data_provider(self):
+    def _adapt_data_provider(self):
         if not self._raw_net:
             raise KeyError('Invalid net structure\n')
         raw_layers = self._raw_net.layer or self._raw_net.layers
         for raw_layer in raw_layers:
             if raw_layer.type != 'Input':
                 continue
-            if not self.inclusive_layer(raw_layer):
+            if not self._inclusive_layer(raw_layer):
                 continue
 
             for i in range(0, len(raw_layer.top)):
@@ -259,7 +427,7 @@ class CaffeAdapter(baseadapter.Adapter):
                 data_provider.tensor = raw_layer.input_param.shape[i].dim[1:] # cancel mini-batch
                 self._uni_model.data_provider.append(data_provider)
 
-    def adapt_net(self):
+    def _adapt_net(self):
         raw_layers = self._raw_net.layer or self._raw_net.layers
         uni_model = self._uni_model
 
@@ -271,7 +439,7 @@ class CaffeAdapter(baseadapter.Adapter):
         for raw_layer in raw_layers:
             if raw_layer.type == 'Input':
                 continue
-            cntk_layer_type, caffe_layer_type = self.get_layer_type(raw_layer)
+            cntk_layer_type, caffe_layer_type = self._get_layer_type(raw_layer)
             if cntk_layer_type is None:
                 if raw_layer.type not in NEGLECT_LAYERS:
                     sys.stderr.write('Non-decision type of CNTK\n')
@@ -293,7 +461,7 @@ class CaffeAdapter(baseadapter.Adapter):
                 inputs_info.append(scope_inputs[bottom_name])
 
             # function
-            cntk_layer_def = self.setup_cntk_layer_def(cntk_layer_type, raw_layer, inputs_info)
+            cntk_layer_def = self._setup_cntk_layer_def(cntk_layer_type, raw_layer, inputs_info)
 
             # refresh the lists
             # only support single output operation
@@ -307,8 +475,7 @@ class CaffeAdapter(baseadapter.Adapter):
             uni_model.cntk_layers[raw_layer.name] = cntk_layer_def
             uni_model.cntk_sorted_layers.append(raw_layer.name)
 
-    def adapt_parameter_data(self):
-        # loading the bvlccaffe model parameters
+    def _adapt_parameter_data(self):
         sys.stdout.write('start parameter loading...\n')
         start_time = time.time()
         caffe_impl = caffeimpl.CaffeResolver()
@@ -350,54 +517,51 @@ class CaffeAdapter(baseadapter.Adapter):
                 cntk_layer.parameter_tensor.append(cntk_parameter_tensor)
         sys.stdout.write('finished matching.\n')
 
-    def get_layer_type(self, raw_layer):
-        # Support legacy bvlccaffe types
+    def _get_layer_type(self, raw_layer):
         caffe_layer_type = raw_layer.type
-
         try:
             cntk_layer_type = caffeimpl.CAFFE_LAYER_WRAPPER[caffe_layer_type]
         except KeyError:
-            cntk_layer_type = self.try_special_case_wrapper(raw_layer)
+            cntk_layer_type = self._try_special_case_wrapper(raw_layer)
         if not cntk_layer_type:
             if raw_layer.type in NEGLECT_LAYERS:
-                sys.stderr.write('warning: Un-supported bvlccaffe type: %s-%s\n' % (raw_layer.name, caffe_layer_type))
+                sys.stdout.write('Warning: Un-supported bvlccaffe type: %s-%s\n' % (raw_layer.name, caffe_layer_type))
             else:
-                sys.stderr.write('error: Un-support and import bvlccaffe type missing: %s-%s\n'
+                sys.stderr.write('Error: Un-support and import bvlccaffe type missing: %s-%s\n'
                                  % (raw_layer.name, caffe_layer_type))
                 raise KeyError('.'.join((raw_layer.name, caffe_layer_type)))
             return None, None
         return cntk_layer_type, caffe_layer_type
 
     @staticmethod
-    def get_layer_parameters(raw_layer):
+    def _get_layer_parameters(raw_layer):
         convert_name = raw_layer.type.lower() + 'param'
         for term in dir(raw_layer):
             if term.lower().replace('_', '') == convert_name:
                 return getattr(raw_layer, term)
         return None
 
-    def try_special_case_wrapper(self, raw_layer):
-        layer_parameter = self.get_layer_parameters(raw_layer)
+    def _try_special_case_wrapper(self, raw_layer):
+        layer_parameter = self._get_layer_parameters(raw_layer)
         cntk_layer_type = None
         if raw_layer.type == 'Eltwise':
-            operate_name = \
-                caffe_pb2.EltwiseParameter.EltwiseOp.DESCRIPTOR.values_by_number[layer_parameter.operation].name
+            operate_name = caffe_pb2.EltwiseParameter.EltwiseOp.DESCRIPTOR.values_by_number[layer_parameter.operation].name
             layer_type = '_'.join((raw_layer.type, operate_name))
             cntk_layer_type = caffeimpl.CAFFE_LAYER_WRAPPER[layer_type]
         return cntk_layer_type
 
-    def setup_cntk_layer_def(self, cntk_layer_type, raw_layer, inputs_info):
+    def _setup_cntk_layer_def(self, cntk_layer_type, raw_layer, inputs_info):
         cntk_layer_def = cntkmodel.CntkLayersDefinition()
         cntk_layer_def.op_name = raw_layer.name
         cntk_layer_def.op_type = cntk_layer_type
         for input_info in inputs_info:
             cntk_layer_def.inputs.append(input_info.op_name)
         cntk_layer_def.outputs.append(raw_layer.name)
-        getattr(SetupCaffeParameters, cntk_layer_type.name)(self.get_layer_parameters(raw_layer), inputs_info,
-                                                            cntk_layer_def)
+        getattr(SetupCaffeParameters, cntk_layer_type.name)(self._get_layer_parameters(raw_layer),
+                                                            inputs_info, cntk_layer_def)
         return cntk_layer_def
 
-    def inclusive_layer(self, raw_layer):
+    def _inclusive_layer(self, raw_layer):
         phase = self._source_solver.phase
         if len(raw_layer.include):
             phase = raw_layer.include[0].phase

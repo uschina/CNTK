@@ -3,9 +3,6 @@
 # Licensed under the MIT license. See LICENSE.md file in the project root
 # for full license information.
 # ==============================================================================
-
-import sys
-
 from cntk.contrib.model2cntk.unimodel.cntkmodel import CntkLayerType
 
 CAFFE_LAYER_WRAPPER = {
@@ -26,25 +23,31 @@ CAFFE_LAYER_WRAPPER = {
 
 
 def singleton(class_):
+    '''
+        singleton instace
+    '''
     instances = {}
 
-    def get_instance(*args, **kwargs):
+    def _get_instance(*args, **kwargs):
         if class_ not in instances:
             instances[class_] = class_(*args, **kwargs)
         return instances[class_]
-    return get_instance
+    return _get_instance
 
 
 @singleton
 class CaffeResolver(object):
+    '''
+        Load Caffe related packages and functions
+    '''
     def __init__(self):
         self.caffe = None
         self.caffepb = None
         self.net = None
         self.solver = None
-        self.__runtime_support__()
+        self._runtime_support()
 
-    def __runtime_support__(self):
+    def _runtime_support(self):
         try:
             import caffe
             self.caffe = caffe
@@ -56,6 +59,15 @@ class CaffeResolver(object):
         self.solver = self.caffepb.SolverParameter
 
     def runtime(self):
+        '''
+         Whether to have Caffe runtime support
+        
+        Args:
+            None
+
+        Return:
+            bool: True for detected runtime Caffe, otherwise False 
+        '''
         return True if self.caffe else False
 
 

@@ -1,7 +1,7 @@
 {
 	"SourceSolver" : {
 	    "Source": "Caffe",
-	    "ModelPath": "./Classification/GoogLeNet_ImageNet/googlenet_deploy.prototxt",
+	    "ModelPath": "./Classification/GoogLeNet_ImageNet/GoogLeNet_deploy.prototxt",
 	    "WeightsPath": "./Classification/GoogLeNet_ImageNet/bvlc_googlenet.caffemodel",
     	"PHASE": 1
 	},

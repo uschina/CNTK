@@ -12,47 +12,34 @@ from .utils import globalconf
 from .validation import validcore
 
 
-class ModelConverter(object):
-    """
-    The model converter includes two statis methods.
-    convert_script(Coming soon): used to convert the training script
-    convert_model: used to convert the trained model
-    """
+class CaffeConverter(object):
+    '''
+     Convert Caffe CNN into CNTK formats
+    '''
     @staticmethod
-    def script_conversion(_):
-        """
-        The function is used to convert the scripts into CNTK python script (Coming soon)
+    def from_model(conf_path):
+        '''
+         Convert a Caffe model to a CNTK model
 
         Args:
-            conf (string): the path of configuration FileExistsError
+            conf_path (str): Path to the configuration file
 
         Returns:
             None
-        """
-        raise AssertionError('Discard for now')
-
-    @staticmethod
-    def convert_model(conf_path):
-        """
-        The function is used to convert the model of Caffe to CNTK
-
-        Args:
-            conf (string): the path of configuration file
-
-        Returns:
-            None
-        """
+        '''
         conf = globalconf.load_conf(conf_path)
         try:
             adapter_impl = adapter.ADAPTER_DICT[conf.source_solver.source]
         except KeyError:
-            sys.stderr.write('un-implemented platform type\n')
+            sys.stderr.write('Platform type not implemented\n')
         cntk_model_desc = adapter_impl.load_model(conf)
 
         instance = cntkinstance.CntkApiInstance(cntk_model_desc, global_conf=conf)
         instance.export_model()
 
-        # valid the network
+        # validate the network
         validator = validcore.Validator(global_conf=conf, functions=instance.get_functions())
         if validator.val_network():
             validator.activate()
+        else:
+            sys.stdout.write('Detect validator disable, ignore validating the network\n')

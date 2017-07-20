@@ -4,4 +4,4 @@
 # for full license information.
 # ==============================================================================
 
-from .run import ModelConverter
+from .convert import CaffeConverter
