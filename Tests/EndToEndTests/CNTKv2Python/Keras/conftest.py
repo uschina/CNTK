@@ -25,11 +25,8 @@ keras_path = os.path.join(abs_path, keras_base_name)
 
 if not os.path.exists(keras_path):
   if not os.path.exists(keras_zip_path):
-    if 'CNTK_EXTERNAL_TESTDATA_SOURCE_DIRECTORY' in os.environ:
-      shutil.copy(os.path.join(os.environ['CNTK_EXTERNAL_TESTDATA_SOURCE_DIRECTORY'], 'Keras', keras_zip_name), abs_path)
-    else:
-      keras_zip_url = 'https://github.com/fchollet/keras/archive/%s.zip' % (keras_version)
-      urlretrieve(keras_zip_url, keras_zip_path)
+    keras_zip_url = 'https://github.com/fchollet/keras/archive/%s.zip' % (keras_version)
+    urlretrieve(keras_zip_url, keras_zip_path)
   with zipfile.ZipFile(keras_zip_path) as keras_zip:
     keras_zip.extractall(abs_path)
   # We'll use our own pytest.ini, move original out of the way
