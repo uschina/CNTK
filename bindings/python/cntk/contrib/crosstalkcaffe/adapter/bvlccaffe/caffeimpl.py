@@ -3,7 +3,7 @@
 # Licensed under the MIT license. See LICENSE.md file in the project root
 # for full license information.
 # ==============================================================================
-from cntk.contrib.model2cntk.unimodel.cntkmodel import CntkLayerType
+from cntk.contrib.crosstalkcaffe.unimodel.cntkmodel import CntkLayerType
 
 CAFFE_LAYER_WRAPPER = {
     'Convolution': CntkLayerType.convolution,
@@ -53,7 +53,7 @@ class CaffeResolver(object):
             self.caffe = caffe
             self.caffepb = caffe.proto.caffe_pb2
         except ImportError:
-            from cntk.contrib.model2cntk.adapter.bvlccaffe import caffe_pb2
+            from cntk.contrib.crosstalkcaffe.adapter.bvlccaffe import caffe_pb2
             self.caffepb = caffe_pb2
         self.net = self.caffepb.NetParameter
         self.solver = self.caffepb.SolverParameter

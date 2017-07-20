@@ -10,7 +10,7 @@ import sys
 from abc import ABCMeta, abstractmethod
 
 import numpy as np
-from cntk.contrib.model2cntk.adapter.bvlccaffe.caffeimpl import CaffeResolver
+from cntk.contrib.crosstalkcaffe.adapter.bvlccaffe.caffeimpl import CaffeResolver
 
 class ValidCore(object):
     '''
@@ -37,7 +37,7 @@ class CaffeValidCore(ValidCore):
          Execute the validation in Caffe side.
 
         Args:
-            source_solver (:class:`~cntk.contrib.model2cntk.utils.globalconf.SourceSolverConf`):
+            source_solver (:class:`~cntk.contrib.crosstalkcaffe.utils.globalconf.SourceSolverConf`):
                 the source solver instanced from global configuration
             valid_dir (str): the path to save temporary CNTK forward results
 

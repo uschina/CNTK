@@ -9,8 +9,8 @@ import os
 import time
 import math
 
-from cntk.contrib.model2cntk.unimodel import cntkmodel
-from cntk.contrib.model2cntk.adapter import baseadapter
+from cntk.contrib.crosstalkcaffe.unimodel import cntkmodel
+from cntk.contrib.crosstalkcaffe.adapter import baseadapter
 from . import caffeimpl
 from . import caffe_pb2
 from google.protobuf import text_format
@@ -61,9 +61,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
             tensor_check (bool, default=True): Whether to check the tensor shape
 
@@ -95,9 +95,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -126,9 +126,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -159,9 +159,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -178,9 +178,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -201,9 +201,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -227,9 +227,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -244,9 +244,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -261,9 +261,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -278,9 +278,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -300,9 +300,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -320,9 +320,9 @@ class SetupCaffeParameters(object):
 
         Args:
             caffe_parameters (:class:`caffe.Parameters`): the parameters of Caffe
-            inputs_info ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkTensorDefinition`):
+            inputs_info ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkTensorDefinition`):
                 The input information of current layer
-            cntk_layer_def ('class':`cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer_def ('class':`cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 The converted definition of CNTK layers
 
         Return:
@@ -350,7 +350,7 @@ class CaffeAdapter(baseadapter.Adapter):
          Load prototxt and weights of Caffe, parsing them into uniform model
 
         Args:
-            global_conf (:class:`~cntk.contrib.model2cntk.utils.globalconf.GlobalConf`):
+            global_conf (:class:`~cntk.contrib.crosstalkcaffe.utils.globalconf.GlobalConf`):
                 The global configurations
         
         Return:

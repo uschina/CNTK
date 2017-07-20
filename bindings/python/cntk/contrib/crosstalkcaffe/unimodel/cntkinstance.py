@@ -149,7 +149,7 @@ class ApiSetup(object):
          Setup convolution op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of convolution op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -183,7 +183,7 @@ class ApiSetup(object):
          Setup batch normalization op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of batch normalization op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -229,7 +229,7 @@ class ApiSetup(object):
          Setup pooling op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of pooling op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -251,7 +251,7 @@ class ApiSetup(object):
          Setup ReLU op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of ReLU op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -268,7 +268,7 @@ class ApiSetup(object):
          Setup dense op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of dense op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -305,7 +305,7 @@ class ApiSetup(object):
          Setup plus op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of dense op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -323,7 +323,7 @@ class ApiSetup(object):
          Setup dropout op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of dropout op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or 
                 :class:`~cntk.input`
@@ -340,7 +340,7 @@ class ApiSetup(object):
          Setup lrn op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of lrn op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -359,7 +359,7 @@ class ApiSetup(object):
          Setup splice op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of splice op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`
@@ -375,7 +375,7 @@ class ApiSetup(object):
          Setup softmax op with given parameters
 
         Args:
-            cntk_layer (:class:`~cntk.contrib.model2cntk.unimodel.cntkmodel.CntkLayersDefinition`):
+            cntk_layer (:class:`~cntk.contrib.crosstalkcaffe.unimodel.cntkmodel.CntkLayersDefinition`):
                 the layer definition of softmax op
             inputs (list): a list contains all :class:`~cntk.ops.functions.Function` or
                 :class:`~cntk.input`

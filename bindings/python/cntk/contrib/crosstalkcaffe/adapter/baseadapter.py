@@ -17,13 +17,6 @@ class Adapter(object):
         return
 
     @abstractmethod
-    def load_description(self, solver_path, model_path):
-        '''
-         load the network structure
-        '''
-        pass
-
-    @abstractmethod
     def load_model(self, global_conf):
         '''
          load the network weights

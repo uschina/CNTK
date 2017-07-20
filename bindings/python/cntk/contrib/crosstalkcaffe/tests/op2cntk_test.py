@@ -7,9 +7,9 @@
 import pytest
 import numpy as np
 import cntk
-from cntk.contrib.model2cntk import utils
-from cntk.contrib.model2cntk.unimodel import cntkmodel
-from cntk.contrib.model2cntk.unimodel.cntkinstance import ApiSetup
+from cntk.contrib.crosstalkcaffe import utils
+from cntk.contrib.crosstalkcaffe.unimodel import cntkmodel
+from cntk.contrib.crosstalkcaffe.unimodel.cntkinstance import ApiSetup
 
 
 def _layer_eq(layer, inputs, expected_out):

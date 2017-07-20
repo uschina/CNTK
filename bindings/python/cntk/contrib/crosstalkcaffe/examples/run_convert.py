@@ -13,7 +13,7 @@ Args:
 
 import sys
 import argparse
-from cntk.contrib.model2cntk import CaffeConverter
+from cntk.contrib.crosstalkcaffe import CaffeConverter
 
 
 NETWORK_DICT = {

@@ -4,7 +4,7 @@
 # for full license information.
 # ==============================================================================
 
-from cntk.contrib.model2cntk.utils import format
+from cntk.contrib.crosstalkcaffe.utils import format
 
 
 class GlobalConf(object):
@@ -86,7 +86,7 @@ def load_conf(conf_path):
         conf_path (str): the path to global configuration file
 
     Return:
-        :class:`~cntk.contrib.model2cntk.utils.GlobalConf`
+        :class:`~cntk.contrib.crosstalkcaffe.utils.GlobalConf`
     '''
     json_attributes = format.json_parser(conf_path)
     global_conf = _load_sub_conf(json_attributes, GlobalConf)
