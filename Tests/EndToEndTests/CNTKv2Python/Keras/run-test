@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#. $TEST_ROOT_DIR/run-test-common
+
+export KERAS_VERSION=2.0.6
+
+# Device ID is passed through $TEST_DEVICE
+# conftest.py transparently pulls in and extracts the Keras .zip
+
+echo py.test \
+  --verbose \
+  $(printf -- "--ignore=keras-$KERAS_VERSION/tests/%s " \
+    integration_tests \
+    keras/backend/backend_test.py \
+    test_documentation.py \
+    test_model_saving.py \
+    test_multiprocessing.py) \
+  -k "not just_a_dummy $(printf "and not %s " \
+    test_LambdaCallback \
+    test_conv3d_transpose \
+    test_convert_weights \
+    test_generator_enqueuer_fail_processes \
+    test_generator_enqueuer_processes \
+    test_generator_methods_interface \
+    test_has_arg_positional_only \
+    test_io_utils \
+    test_lambda \
+    test_merge \
+    test_tfoptimizer \
+    test_warnings)" \
+  keras-$KERAS_VERSION/tests && echo __COMPLETED__
